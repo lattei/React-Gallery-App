@@ -1,14 +1,14 @@
 import  { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SearchForm = ({ fetchData }) => {
-    const searchText = useRef(null);
+const SearchForm = ({ onSearch }) => {
+    const searchText = useRef();
     const navigate = useNavigate();
 
     const handleSubmit = e => {
         e.preventDefault();
         let query = searchText.current.value;
-        fetchData(query);
+        onSearch(query);
         navigate(`/search/${query}`);
         e.currentTarget.reset();
     }
@@ -16,7 +16,7 @@ const SearchForm = ({ fetchData }) => {
 
 
     return (
-        <form className="search-form" onSubmit={(e) => handleSubmit(e)}>
+        <form className="search-form" onSubmit={handleSubmit}>
             <input
                 type="search"
                 ref={searchText}

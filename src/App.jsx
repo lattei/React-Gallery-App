@@ -8,12 +8,13 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import SearchForm from './components/SearchForm';
 import Nav from './components/Nav';
 import PhotoList from './components/PhotoList';
+import NoPhotos from './components/NoPhotos';
 
 
 function App() {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [query, setQuery] = useState("beach");
+  const [query, setQuery] = useState("puppy");
 
   const fetchData = (query) => {
     setLoading(true);
@@ -42,10 +43,10 @@ function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<Navigate to="/dogs" />} />
-        <Route path="/dogs" element={<PhotoList title="Dogs"  data={photos} />}/>
-        <Route path="/cats" element={<PhotoList title="Cats" data={photos}/>}/>
-        <Route path="/beach" element={<PhotoList title="Beach"  data={photos} />}/>
-        <Route path="/search/:query" element={<PhotoList title="Results" data={photos} />}/>
+        <Route path="/dogs" element={ loading ? <p>Loading... please wait</p> : <PhotoList title="Dogs"  data={photos} />}/>
+        <Route path="/cats" element={loading ? <p>Loading... please wait</p>:<PhotoList title="Cats" data={photos}/>}/>
+        <Route path="/beach" element={loading ? <p>Loading... please wait</p> :<PhotoList title="Beach"  data={photos} />}/>
+        <Route path="/search/:query" element={loading ? <p>Loading... please wait</p> :<PhotoList title="Results" data={photos} />}/>
       </Routes>
     </div>
   );
