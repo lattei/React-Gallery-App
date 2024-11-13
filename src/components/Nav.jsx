@@ -1,21 +1,17 @@
-import React from "react";
+
 import { NavLink } from "react-router-dom";
 
 //Using index.html to create my Nav component
 const Nav = () => {
-    return(
-
+    return (
+        <nav className="main-nav">
+            <ul>
+                <li><NavLink to="dogs">Dogs</NavLink></li>
+                <li><NavLink to="cats">Cats</NavLink></li>
+                <li><NavLink to="beach">Beach</NavLink></li>
+            </ul>
+        </nav>
     );
 };
 
 export default Nav;
-
-/* 
-<nav class="main-nav">
-        <ul>
-          <li><a href='#'>Cats</a></li>
-          <li><a href='#'>Dogs</a></li>
-          <li><a href='#'>Computers</a></li>
-        </ul>
-      </nav>
-*/

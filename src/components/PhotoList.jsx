@@ -1,17 +1,11 @@
-import React from "react";
 import Photo from "./Photo";
 import NoPhotos from "./NoPhotos";
 
 
 
 const PhotoList = ({data, title}) => {
-    let photos;
-    if (data.length > 0) {
-        photos = data.map(photo =>
-        <Photo key= {photo.id} photo= {photo} />);
-    } else {
-        photos = <NoPhotos />
-    }
+    // Converted into a tenary
+    const photos = data.length > 0 ? data.map((photo) => <Photo key={photo.id} photo={photo} />) : <NoPhotos />
     return (
         <div className="photo-container">
             <h2>{title}</h2>
