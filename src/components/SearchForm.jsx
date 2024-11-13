@@ -1,13 +1,15 @@
-import  { useRef } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+//Changed useRef to useState in order to have re-renders when searching.
+
 const SearchForm = ({ onSearch }) => {
-    const searchText = useRef();
+    const [query, setQuery] = useState("");
     const navigate = useNavigate();
 
+// Handle Submit calls the prop for the current search query then takes it to the search route, afterwards it clears off the search bar.
     const handleSubmit = e => {
         e.preventDefault();
-        let query = searchText.current.value;
         onSearch(query);
         navigate(`/search/${query}`);
         e.currentTarget.reset();
@@ -19,7 +21,7 @@ const SearchForm = ({ onSearch }) => {
         <form className="search-form" onSubmit={handleSubmit}>
             <input
                 type="search"
-                ref={searchText}
+                onChange={e => setQuery(e.target.value)}
                 name="search"
                 placeholder="Search"
                 required

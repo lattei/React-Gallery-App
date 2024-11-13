@@ -1,52 +1,61 @@
 import { useEffect, useState } from 'react';
 import apiKey from './config';
 import axios from 'axios';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 
 
 //App components
 import SearchForm from './components/SearchForm';
 import Nav from './components/Nav';
 import PhotoList from './components/PhotoList';
-import NoPhotos from './components/NoPhotos';
+import ErrorHandling from './components/ErrorHandling';
+
 
 
 function App() {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [query, setQuery] = useState("puppy");
+  const location = useLocation();
+
+
 
   const fetchData = (query) => {
     setLoading(true);
     axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
       .then(response => {
-        console.log('API', response.data.photos);
+        console.log('API', response.data.photos); //Ensuring that I am receiving an array of photos
         /* API response + Loading state */
         setPhotos(response.data.photos.photo);
         setLoading(false);
-        setQuery(query);
 
       })
       .catch(error =>  {
-        console.log(error, "There's been an error getting your photos..");
+        console.log(error, "There's been an error getting your photos.."); //Do not remove pertaining to error handling
         setLoading(false);
       }); 
   };
 
+  // Keeps state of previous searches as well. EE*
   useEffect(() => {
-    fetchData(query);
-  }, [query]);
+    const path = location.pathname.replace('/', '');
+    fetchData(path)
+    },[location.pathname]);
 
+
+//Routes created as well as Search Form on display.
   return (
     <div className="container">
       <SearchForm onSearch={fetchData} />
       <Nav />
       <Routes>
         <Route path="/" element={<Navigate to="/dogs" />} />
-        <Route path="/dogs" element={ loading ? <p>Loading... please wait</p> : <PhotoList title="Dogs"  data={photos} />}/>
+        <Route path="/dogs" element={ loading ? <p>Loading... please wait</p> : <PhotoList title="Dogs" data={photos} /> }/>
         <Route path="/cats" element={loading ? <p>Loading... please wait</p>:<PhotoList title="Cats" data={photos}/>}/>
         <Route path="/beach" element={loading ? <p>Loading... please wait</p> :<PhotoList title="Beach"  data={photos} />}/>
         <Route path="/search/:query" element={loading ? <p>Loading... please wait</p> :<PhotoList title="Results" data={photos} />}/>
+        {/* Exceeds Expectations criteria - 404 */}
+        <Route path="*" element={<Navigate replace to="/404" />}/>
+        <Route path="/404" element={<ErrorHandling />} />
       </Routes>
     </div>
   );
