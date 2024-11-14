@@ -12,7 +12,7 @@ const SearchForm = ({ onSearch }) => {
         e.preventDefault();
         onSearch(query);
         navigate(`/search/${query}`);
-        e.currentTarget.reset();
+        setQuery("");
     }
 
 
@@ -22,6 +22,7 @@ const SearchForm = ({ onSearch }) => {
             <input
                 type="search"
                 onChange={e => setQuery(e.target.value)}
+                value={query}
                 name="search"
                 placeholder="Search"
                 required

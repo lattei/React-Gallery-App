@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import apiKey from './config';
 import axios from 'axios';
-import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { Route, Routes, Navigate, useLocation, useParams } from 'react-router-dom';
 
 
 //App components
@@ -16,8 +16,9 @@ function App() {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-
-
+  const { query } = useParams();
+  console.log("Query:", query);
+  
 
   const fetchData = (query) => {
     setLoading(true);
@@ -31,15 +32,38 @@ function App() {
       })
       .catch(error =>  {
         console.log(error, "There's been an error getting your photos.."); //Do not remove pertaining to error handling
+        setPhotos([]);
         setLoading(false);
       }); 
   };
 
-  // Keeps state of previous searches as well. EE*
+  /* Keeps state of previous searches as well. EE*
+  In order to access and populate photos from paths
+  Create a dictionary holding pathname to -> query
+  fetchdata to said path name
+  */
+  
   useEffect(() => {
-    const path = location.pathname.replace('/', '');
-    fetchData(path)
-    },[location.pathname]);
+    const pathDict = {
+      "/dogs": "dogs",
+      "/cats": "cats",
+      "/beach": "beach",
+    };
+    console.log(`Location is now ${location.pathname}`);
+    console.log(`Query param: ${query}`);
+    setPhotos([]);
+     //Making sure that the previous state is cleared out so when users press the back or forward button it works.
+    const path = location.pathname;
+
+    if (pathDict[path]) {
+      fetchData(pathDict[path]);
+    }
+    else if (query) {
+      
+      fetchData(query);
+    }
+    
+  }, [location.pathname, query]);
 
 
 //Routes created as well as Search Form on display.
